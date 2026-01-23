@@ -1,73 +1,80 @@
-# React + TypeScript + Vite
+# CPI–Income Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+The CPI–Income Dashboard is a data-driven web application that explores the relationship between consumer price inflation and household income in Malaysia. It visualizes how changes in the cost of living compare against income growth over time, with a focus on affordability and purchasing power rather than raw price movements alone.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The project is designed as an analytical and exploratory dashboard, not an official statistical product.
 
-## React Compiler
+---
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## Data Sources
 
-## Expanding the ESLint configuration
+All data is retrieved from **OpenDOSM (Malaysia Open Data)**:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* **Consumer Price Index (CPI)** – headline CPI, filtered to the overall division and recent years
+* **Household Income** – percentile-based income data, primarily using the 50th percentile (median) where available
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+API filtering is applied at the source to reduce noise and ensure consistency with the analysis assumptions.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Methodology
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+* CPI and income data are aligned at a **monthly** level
+* A base period (2019 = 100) is used to compute **inflation-adjusted (real) income**
+* Household income is represented by **median income (50th percentile)** where available
+* When median data is missing for certain periods, a clearly documented approximation using nearby percentiles may be applied
+* Missing or invalid data points are handled explicitly to avoid misleading results
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+This approach prioritizes transparency and interpretability over aggressive data interpolation.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## Features
+
+* CPI vs real household income time-series visualization
+* Affordability indicators based on real income relative to CPI
+* Distribution-aware handling of income data
+* Clear separation between data fetching, computation, state management, and UI
+
+---
+
+## Tech Stack
+
+* **Frontend:** React, Vite, TypeScript
+* **Styling:** Tailwind CSS
+* **Charts:** Recharts
+* **State Management:** Zustand
+* **Data Access:** OpenDOSM API
+
+---
+
+## Project Structure
+
+The codebase follows a layered architecture:
+
+* `api/` – external data access
+* `domain/` – normalization and economic computations
+* `store/` – global application state
+* `hooks/` – orchestration and side effects
+* `components/` – charts and UI elements
+* `pages/` – route-level views
+
+This structure keeps economic logic out of the UI layer and makes the analysis easier to audit and extend.
+
+---
+
+## Limitations
+
+* The dashboard does not claim to produce official income or inflation statistics
+* Percentile-based income data cannot be converted into true mean income without additional distributional information
+* Approximations are used cautiously and documented where applied
+
+---
+
+## Purpose
+
+This project is intended for learning, exploration, and portfolio demonstration. It emphasizes careful data handling, defensible assumptions, and clarity in economic visualization rather than maximal precision.
+
+---
