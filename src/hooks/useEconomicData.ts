@@ -5,11 +5,16 @@ import { computeDerived } from "../domain/compute";
 import { useEconomicStore } from "../store/economic.store";
 
 export function useEconomicData() {
+  const startLoading = useEconomicStore((s) => s.startLoading);
   const setData = useEconomicStore((s) => s.setData);
   const setError = useEconomicStore((s) => s.setError);
 
   useEffect(() => {
+    let isActive = true;
+
     async function load() {
+      startLoading();
+
       try {
         const [cpi, income] = await Promise.all([
           getCPI(),
@@ -19,12 +24,16 @@ export function useEconomicData() {
         const baseYear = "2019-01";
         const ts = computeDerived(buildTimeSeries(cpi, income, baseYear));
 
-        setData(ts);
-      } catch (err) {
-        setError("Failed to load economic data");
+        if (isActive) setData(ts);
+      } catch {
+        if (isActive) setError("OpenDOSM did not return the economic series");
       }
     }
 
     load();
-  }, [setData, setError]);
+
+    return () => {
+      isActive = false;
+    };
+  }, [setData, setError, startLoading]);
 }

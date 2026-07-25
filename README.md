@@ -1,4 +1,4 @@
-# CPI–Income Dashboard
+# Belanja - CPI-Income Dashboard
 
 ## Overview
 
@@ -21,11 +21,11 @@ API filtering is applied at the source to reduce noise and ensure consistency wi
 
 ## Methodology
 
-* CPI and income data are aligned at a **monthly** level
-* A base period (2019 = 100) is used to compute **inflation-adjusted (real) income**
-* Household income is represented by **median income (50th percentile)** where available
-* When median data is missing for certain periods, a clearly documented approximation using nearby percentiles may be applied
-* Missing or invalid data points are handled explicitly to avoid misleading results
+* Monthly CPI and observed income releases are aligned by date without interpolating missing income months
+* Each series is indexed to **January 2019 = 100** for a like-for-like comparison
+* Household income uses the **median value at the 50th percentile**
+* Real buying power is the income index divided by the headline price index
+* Missing or invalid data points remain missing rather than being replaced with estimates
 
 This approach prioritizes transparency and interpretability over aggressive data interpolation.
 
@@ -33,9 +33,9 @@ This approach prioritizes transparency and interpretability over aggressive data
 
 ## Features
 
-* CPI vs real household income time-series visualization
-* Affordability indicators based on real income relative to CPI
-* Distribution-aware handling of income data
+* Normalized headline price vs median household income time-series
+* A live RM100 test that translates index movement into a common reference amount
+* Explicit separation between the matched comparison period and newer CPI-only data
 * Clear separation between data fetching, computation, state management, and UI
 
 ---

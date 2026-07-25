@@ -5,14 +5,21 @@ type EconomicState = {
   data: TimeSeriesStore | null;
   isLoading: boolean;
   error: string | null;
+  startLoading: () => void;
   setData: (data: TimeSeriesStore) => void;
   setError: (error: string) => void;
 };
 
 export const useEconomicStore = create<EconomicState>((set) => ({
   data: null,
-  isLoading: false,
+  isLoading: true,
   error: null,
+
+  startLoading: () =>
+    set({
+      isLoading: true,
+      error: null,
+    }),
 
   setData: (data) =>
     set({
