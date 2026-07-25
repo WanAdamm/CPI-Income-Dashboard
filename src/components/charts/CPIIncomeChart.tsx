@@ -124,6 +124,7 @@ export default function CPIIncomeChart({ data }: Props) {
             itemStyle={{ color: "#ffffff" }}
             labelStyle={{ color: "#c8d8d2", marginBottom: 8 }}
             labelFormatter={(value) => formatMonth(String(value))}
+            itemSorter={(item) => -Number(item.value)}
             formatter={(value, name) => [
               typeof value === "number" ? `${value.toFixed(1)} pts` : "N/A",
               String(name),
